@@ -5,6 +5,9 @@ import re
 
 
 def profile_imported(event):
+    if not event.full_import:
+        return
+
     profile = re.sub('^profile-', '', event.profile_id)
     site = getToolByName(event.tool, 'portal_url').getPortalObject()
     hook = queryAdapter(site, IProfileHook, name=profile)
