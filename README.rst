@@ -5,6 +5,20 @@ ftw.profilehook provides a hook for executing custom code after a
 generic setup profile is installed.
 
 
+Motivation
+----------
+
+We often use import steps for executing code after import a generic
+setup profile.
+Registering a lot of setup handlers is bad because it extends the
+import duration of every profile and the amount of import steps are
+limited in generic setup, causing bad effects when exceeded.
+Import steps are meant to import things from any profile, not for
+executing code after importing a specific profile.
+Because of these reasons ``ftw.profilehook`` exists and provides an
+easy method to solve this issue.
+
+
 
 Usage
 -----
