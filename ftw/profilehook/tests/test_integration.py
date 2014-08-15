@@ -22,6 +22,7 @@ class TestIntegration(ZCMLIsolationTestCase):
     layer = PROFILEHOOK_INTEGRATION_TESTING
 
     def tearDown(self):
+        super(TestIntegration, self).tearDown()
         call_counter.reset()
 
     def test_hook_is_called_when_profile_is_imported(self):

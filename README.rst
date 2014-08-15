@@ -51,7 +51,7 @@ Do things in your hook (``hooks.py``):
   from zope.component import alsoProvides
 
 
-  def default_profile_installed(site, install_context):
+  def default_profile_installed(site):
     mark_site_as_my_root(site)
 
 
