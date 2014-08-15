@@ -27,6 +27,8 @@ Register your hook function in ZCML (configure.zcml):
       xmlns:profilehook="http://namespaces.zope.org/profilehook"
       i18n_domain="my.package">
 
+    <include package="ftw.profilehook" />
+
     <genericsetup:registerProfile
         name="default"
         title="my.package"
