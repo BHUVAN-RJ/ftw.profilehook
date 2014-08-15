@@ -11,4 +11,11 @@
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 
+  <genericsetup:registerProfile
+      name="bar"
+      title="ftw.profilehook.tests"
+      directory="profiles/bar"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
+
 </configure>
