@@ -27,14 +27,26 @@ class TestIntegration(ZCMLIsolationTestCase):
 
     def test_hook_is_called_when_profile_is_imported(self):
         self.load_zcml_string(
-            '<configure xmlns="http://namespaces.zope.org/zope"'
-            '           xmlns:five="http://namespaces.zope.org/five"'
-            '           xmlns:profilehook="http://namespaces.zope.org/profilehook">'
-            ' <include package="ftw.profilehook" />'
-            ' <profilehook:hook'
-            '     profile="ftw.profilehook.tests:foo"'
-            '     handler="{0}.call_counter"'
-            '     />'
+            '<configure'
+            '    package="ftw.profilehook.tests"'
+            '    xmlns="http://namespaces.zope.org/zope"'
+            '    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"'
+            '    xmlns:i18n="http://namespaces.zope.org/i18n"'
+            '    xmlns:profilehook="http://namespaces.zope.org/profilehook"'
+            '    i18n_domain="ftw.profilehook">'
+
+            '  <genericsetup:registerProfile'
+            '      name="foo"'
+            '      title="ftw.profilehook.tests"'
+            '      directory="profiles/foo"'
+            '      provides="Products.GenericSetup.interfaces.EXTENSION"'
+            '      />'
+
+            '  <include package="ftw.profilehook" />'
+            '  <profilehook:hook'
+            '      profile="ftw.profilehook.tests:foo"'
+            '      handler="{0}.call_counter"'
+            '      />'
             '</configure>'.format(self.__module__))
 
         applyProfile(
@@ -44,14 +56,26 @@ class TestIntegration(ZCMLIsolationTestCase):
 
     def test_hook_is_not_called_when_other_objects_are_imported(self):
         self.load_zcml_string(
-            '<configure xmlns="http://namespaces.zope.org/zope"'
-            '           xmlns:five="http://namespaces.zope.org/five"'
-            '           xmlns:profilehook="http://namespaces.zope.org/profilehook">'
-            ' <include package="ftw.profilehook" />'
-            ' <profilehook:hook'
-            '     profile="ftw.profilehook.tests:bar"'
-            '     handler="{0}.call_counter"'
-            '     />'
+            '<configure'
+            '    package="ftw.profilehook.tests"'
+            '    xmlns="http://namespaces.zope.org/zope"'
+            '    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"'
+            '    xmlns:i18n="http://namespaces.zope.org/i18n"'
+            '    xmlns:profilehook="http://namespaces.zope.org/profilehook"'
+            '    i18n_domain="ftw.profilehook">'
+
+            '  <genericsetup:registerProfile'
+            '      name="foo"'
+            '      title="ftw.profilehook.tests"'
+            '      directory="profiles/foo"'
+            '      provides="Products.GenericSetup.interfaces.EXTENSION"'
+            '      />'
+
+            '  <include package="ftw.profilehook" />'
+            '  <profilehook:hook'
+            '      profile="ftw.profilehook.tests:bar"'
+            '      handler="{0}.call_counter"'
+            '      />'
             '</configure>'.format(self.__module__))
 
         applyProfile(

@@ -14,11 +14,6 @@ class ProfilehookLayer(PloneSandboxLayer):
                        ftw.profilehook,
                        context=configurationContext)
 
-        import ftw.profilehook.tests
-        xmlconfig.file('configure.zcml',
-                       ftw.profilehook.tests,
-                       context=configurationContext)
-
 
 PROFILEHOOK_FIXTURE = ProfilehookLayer()
 PROFILEHOOK_INTEGRATION_TESTING = IntegrationTesting(
