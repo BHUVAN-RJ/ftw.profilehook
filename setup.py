@@ -37,6 +37,7 @@ setup(name='ftw.profilehook',
       zip_safe=False,
 
       install_requires=[
+        'Plone',
         'setuptools',
         ],
 
