@@ -55,7 +55,7 @@ class TestIntegration(TestCase):
 
         self.assertEquals(1, call_counter.calls)
 
-    def test_hook_is_not_called_when_other_objects_are_imported(self):
+    def test_hook_is_not_called_when_other_profiles_are_imported(self):
         self.layer['load_zcml_string'](
             '<configure'
             '    package="ftw.profilehook.tests"'
