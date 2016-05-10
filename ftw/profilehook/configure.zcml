@@ -10,4 +10,8 @@
       for="Products.GenericSetup.interfaces.IProfileImportedEvent"
       handler=".subscribers.profile_imported" />
 
+  <subscriber
+      for="Products.GenericSetup.interfaces.IBeforeProfileImportEvent"
+      handler=".subscribers.before_profile_import" />
+
 </configure>

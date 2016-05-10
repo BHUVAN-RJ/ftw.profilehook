@@ -76,6 +76,21 @@ Do things in your hook (``hooks.py``):
 After your profile (``my.package:default``) is installed, your hook is executed.
 
 
+Before-Import Hook
+------------------
+
+The standard hook (``profilehook:hook``) is executed *after* importing the profile.
+By using the ``profilehook:before_import_hook`` directive, you can register hooks
+which are executed *before* importing the profile.
+
+.. code:: xml
+
+  <profilehook:hook
+      profile="profilehook:before_import_hook"
+      handler=".hooks.before_installing_default_profile"
+      />
+
+
 
 Links
 =====
