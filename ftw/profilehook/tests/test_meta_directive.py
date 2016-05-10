@@ -1,6 +1,6 @@
 from ftw.profilehook.interfaces import IProfileHook
+from unittest2 import TestCase
 from ftw.profilehook.testing import PROFILEHOOK_INTEGRATION_TESTING
-from ftw.profilehook.tests.base import ZCMLIsolationTestCase
 from zope.component import getAdapter
 
 
@@ -8,15 +8,11 @@ def hook(site):
     pass
 
 
-class TestMetaDirective(ZCMLIsolationTestCase):
+class TestMetaDirective(TestCase):
     layer = PROFILEHOOK_INTEGRATION_TESTING
 
-    def setUp(self):
-        super(TestMetaDirective, self).setUp()
-        self.site = self.layer['portal']
-
     def test_registering_hook_registers_adapter(self):
-        self.load_zcml_string(
+        self.layer['load_zcml_string'](
             '<configure'
             '   xmlns="http://namespaces.zope.org/zope"'
             '   xmlns:five="http://namespaces.zope.org/five"'
@@ -31,6 +27,6 @@ class TestMetaDirective(ZCMLIsolationTestCase):
             '</configure>'.format(self.__module__))
 
 
-        self.assertEquals(hook, getAdapter(self.site,
+        self.assertEquals(hook, getAdapter(self.layer['portal'],
                                            IProfileHook,
                                            name='ftw.profilehook.tests:foo'))

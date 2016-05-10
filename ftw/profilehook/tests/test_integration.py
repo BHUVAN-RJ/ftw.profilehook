@@ -1,7 +1,7 @@
 from ftw.profilehook.testing import PROFILEHOOK_INTEGRATION_TESTING
-from ftw.profilehook.tests.base import ZCMLIsolationTestCase
 from plone.app.testing import applyProfile
 from Products.CMFCore.utils import getToolByName
+from unittest2 import TestCase
 
 
 class CallCounter(object):
@@ -19,7 +19,7 @@ class CallCounter(object):
 call_counter = CallCounter()
 
 
-class TestIntegration(ZCMLIsolationTestCase):
+class TestIntegration(TestCase):
     layer = PROFILEHOOK_INTEGRATION_TESTING
 
     def tearDown(self):
@@ -27,7 +27,7 @@ class TestIntegration(ZCMLIsolationTestCase):
         call_counter.reset()
 
     def test_hook_is_called_when_profile_is_imported(self):
-        self.load_zcml_string(
+        self.layer['load_zcml_string'](
             '<configure'
             '    package="ftw.profilehook.tests"'
             '    xmlns="http://namespaces.zope.org/zope"'
@@ -56,7 +56,7 @@ class TestIntegration(ZCMLIsolationTestCase):
         self.assertEquals(1, call_counter.calls)
 
     def test_hook_is_not_called_when_other_objects_are_imported(self):
-        self.load_zcml_string(
+        self.layer['load_zcml_string'](
             '<configure'
             '    package="ftw.profilehook.tests"'
             '    xmlns="http://namespaces.zope.org/zope"'
@@ -85,7 +85,7 @@ class TestIntegration(ZCMLIsolationTestCase):
         self.assertEquals(0, call_counter.calls)
 
     def test_hook_is_not_called_when_not_all_import_steps_are_executed(self):
-        self.load_zcml_string(
+        self.layer['load_zcml_string'](
             '<configure'
             '    package="ftw.profilehook.tests"'
             '    xmlns="http://namespaces.zope.org/zope"'
