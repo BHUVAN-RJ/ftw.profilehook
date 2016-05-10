@@ -4,19 +4,11 @@ from Products.CMFCore.utils import getToolByName
 from unittest2 import TestCase
 
 
-class CallCounter(object):
-
-    def __init__(self):
-        self.reset()
-
-    def reset(self):
-        self.calls = 0
-
-    def __call__(self, site):
-        self.calls += 1
+execution_log = []
 
 
-call_counter = CallCounter()
+def hook(site):
+    execution_log.append('hook')
 
 
 class TestIntegration(TestCase):
@@ -24,7 +16,7 @@ class TestIntegration(TestCase):
 
     def tearDown(self):
         super(TestIntegration, self).tearDown()
-        call_counter.reset()
+        execution_log[:] = []
 
     def test_hook_is_called_when_profile_is_imported(self):
         self.layer['load_zcml_string'](
@@ -46,14 +38,14 @@ class TestIntegration(TestCase):
             '  <include package="ftw.profilehook" />'
             '  <profilehook:hook'
             '      profile="ftw.profilehook.tests:foo"'
-            '      handler="{0}.call_counter"'
+            '      handler="{0}.hook"'
             '      />'
             '</configure>'.format(self.__module__))
 
         applyProfile(
             self.layer['portal'], 'ftw.profilehook.tests:foo')
 
-        self.assertEquals(1, call_counter.calls)
+        self.assertEquals(['hook'], execution_log)
 
     def test_hook_is_not_called_when_other_profiles_are_imported(self):
         self.layer['load_zcml_string'](
@@ -75,14 +67,14 @@ class TestIntegration(TestCase):
             '  <include package="ftw.profilehook" />'
             '  <profilehook:hook'
             '      profile="ftw.profilehook.tests:bar"'
-            '      handler="{0}.call_counter"'
+            '      handler="{0}.hook"'
             '      />'
             '</configure>'.format(self.__module__))
 
         applyProfile(
             self.layer['portal'], 'ftw.profilehook.tests:foo')
 
-        self.assertEquals(0, call_counter.calls)
+        self.assertEquals([], execution_log)
 
     def test_hook_is_not_called_when_not_all_import_steps_are_executed(self):
         self.layer['load_zcml_string'](
@@ -104,7 +96,7 @@ class TestIntegration(TestCase):
             '  <include package="ftw.profilehook" />'
             '  <profilehook:hook'
             '      profile="ftw.profilehook.tests:foo"'
-            '      handler="{0}.call_counter"'
+            '      handler="{0}.hook"'
             '      />'
             '</configure>'.format(self.__module__))
 
@@ -112,7 +104,7 @@ class TestIntegration(TestCase):
         setup_tool = getToolByName(self.layer['portal'], 'portal_setup')
 
         setup_tool.runImportStepFromProfile(profile_id, 'actions')
-        self.assertEquals(0, call_counter.calls)
+        self.assertEquals([], execution_log)
 
         setup_tool.runAllImportStepsFromProfile(profile_id)
-        self.assertEquals(1, call_counter.calls)
+        self.assertEquals(['hook'], execution_log)
