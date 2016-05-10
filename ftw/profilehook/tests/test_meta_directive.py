@@ -1,4 +1,3 @@
-from zope.configuration.exceptions import ConfigurationError
 from ftw.profilehook.interfaces import IProfileHook
 from ftw.profilehook.testing import PROFILEHOOK_INTEGRATION_TESTING
 from ftw.profilehook.tests.base import ZCMLIsolationTestCase
