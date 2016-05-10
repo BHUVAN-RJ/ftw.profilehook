@@ -11,6 +11,10 @@ def hook(site):
     execution_log.append('hook')
 
 
+def import_step(site):
+    execution_log.append('import step')
+
+
 class TestIntegration(TestCase):
     layer = PROFILEHOOK_INTEGRATION_TESTING
 
@@ -18,7 +22,7 @@ class TestIntegration(TestCase):
         super(TestIntegration, self).tearDown()
         execution_log[:] = []
 
-    def test_hook_is_called_when_profile_is_imported(self):
+    def test_hook_is_called_after_profile_is_imported(self):
         self.layer['load_zcml_string'](
             '<configure'
             '    package="ftw.profilehook.tests"'
@@ -35,6 +39,13 @@ class TestIntegration(TestCase):
             '      provides="Products.GenericSetup.interfaces.EXTENSION"'
             '      />'
 
+            '  <genericsetup:importStep'
+            '      name="ftw.profilehook.tests"'
+            '      title="ftw.profilehook.test"'
+            '      description=""'
+            '      handler="{0}.import_step"'
+            '      />'
+
             '  <include package="ftw.profilehook" />'
             '  <profilehook:hook'
             '      profile="ftw.profilehook.tests:foo"'
@@ -45,7 +56,7 @@ class TestIntegration(TestCase):
         applyProfile(
             self.layer['portal'], 'ftw.profilehook.tests:foo')
 
-        self.assertEquals(['hook'], execution_log)
+        self.assertEquals(['import step', 'hook'], execution_log)
 
     def test_hook_is_not_called_when_other_profiles_are_imported(self):
         self.layer['load_zcml_string'](
