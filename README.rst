@@ -85,8 +85,8 @@ which are executed *before* importing the profile.
 
 .. code:: xml
 
-  <profilehook:hook
-      profile="profilehook:before_import_hook"
+  <profilehook:before_import_hook
+      profile="my.package:default"
       handler=".hooks.before_installing_default_profile"
       />
 
