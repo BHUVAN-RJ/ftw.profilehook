@@ -6,7 +6,14 @@
         namespace="http://namespaces.zope.org/profilehook"
         name="hook"
         schema=".meta.IRegisterHook"
-        handler=".meta.registerHook"
+        handler=".meta.register_hook"
+        />
+
+    <meta:directive
+        namespace="http://namespaces.zope.org/profilehook"
+        name="before_import_hook"
+        schema=".meta.IRegisterHook"
+        handler=".meta.register_before_import_hook"
         />
 
 </configure>

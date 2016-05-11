@@ -11,6 +11,10 @@ def hook(site):
     execution_log.append('hook')
 
 
+def before_import_hook(site):
+    execution_log.append('before import hook')
+
+
 def import_step(site):
     execution_log.append('import step')
 
@@ -119,3 +123,47 @@ class TestIntegration(TestCase):
 
         setup_tool.runAllImportStepsFromProfile(profile_id)
         self.assertEquals(['hook'], execution_log)
+
+    def test_before_import_hook_is_executed_before_profile_is_imported(self):
+        self.layer['load_zcml_string'](
+            '<configure'
+            '    package="ftw.profilehook.tests"'
+            '    xmlns="http://namespaces.zope.org/zope"'
+            '    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"'
+            '    xmlns:i18n="http://namespaces.zope.org/i18n"'
+            '    xmlns:profilehook="http://namespaces.zope.org/profilehook"'
+            '    i18n_domain="ftw.profilehook">'
+
+            '  <genericsetup:registerProfile'
+            '      name="foo"'
+            '      title="ftw.profilehook.tests"'
+            '      directory="profiles/foo"'
+            '      provides="Products.GenericSetup.interfaces.EXTENSION"'
+            '      />'
+
+            '  <genericsetup:importStep'
+            '      name="ftw.profilehook.tests"'
+            '      title="ftw.profilehook.test"'
+            '      description=""'
+            '      handler="{0}.import_step"'
+            '      />'
+
+            '  <include package="ftw.profilehook" />'
+            '  <profilehook:hook'
+            '      profile="ftw.profilehook.tests:foo"'
+            '      handler="{0}.hook"'
+            '      />'
+
+            '  <profilehook:before_import_hook'
+            '      profile="ftw.profilehook.tests:foo"'
+            '      handler="{0}.before_import_hook"'
+            '      />'
+
+            '</configure>'.format(self.__module__))
+
+        applyProfile(
+            self.layer['portal'], 'ftw.profilehook.tests:foo')
+
+        self.assertEquals(['before import hook',
+                           'import step',
+                           'hook'], execution_log)

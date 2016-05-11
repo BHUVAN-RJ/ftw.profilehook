@@ -1,3 +1,4 @@
+from ftw.profilehook.interfaces import IBeforeImportHook
 from ftw.profilehook.interfaces import IProfileHook
 from zope.component import zcml
 from zope.configuration.fields import GlobalObject
@@ -20,12 +21,28 @@ class IRegisterHook(Interface):
         required=True)
 
 
-def registerHook(_context, profile, handler):
+def register_hook(context, profile, handler):
+    return _register_hook_adapter(context,
+                                  profile=profile,
+                                  handler=handler,
+                                  directive_name='profilehook:hook',
+                                  providing=IProfileHook)
+
+
+def register_before_import_hook(context, profile, handler):
+    return _register_hook_adapter(context,
+                                  profile=profile,
+                                  handler=handler,
+                                  directive_name='profilehook:before_import_hook',
+                                  providing=IBeforeImportHook)
+
+
+def _register_hook_adapter(context, profile, handler, directive_name, providing):
     def factory(site):
         return handler
 
-    _context.action(
-        discriminator=('profile', profile),
+    context.action(
+        discriminator=(directive_name, profile),
         callable=zcml.handler,
         args=('registerAdapter',
-              factory, [Interface], IProfileHook, profile, _context.info))
+              factory, [Interface], providing, profile, context.info))
