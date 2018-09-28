@@ -9,11 +9,17 @@ def profile_imported(event):
     if not event.full_import:
         return
 
+    if not isinstance(event.profile_id, (str, unicode)):
+        return
+
     trigger_hook_for(event.profile_id, IProfileHook)
 
 
 def before_profile_import(event):
     if not event.full_import:
+        return
+
+    if not isinstance(event.profile_id, (str, unicode)):
         return
 
     trigger_hook_for(event.profile_id, IBeforeImportHook)

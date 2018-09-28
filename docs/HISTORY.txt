@@ -4,6 +4,7 @@ Changelog
 1.2.2 (unreleased)
 ------------------
 
+- Fix error when uploading a tarball in portal_setup. [jone]
 - Add plone 5.1.x test cfg. [mathias.leimgruber]
 
 
